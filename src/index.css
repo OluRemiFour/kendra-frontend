@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  --color-brand-primary: #00f2ff;
+  --color-brand-secondary: #ffb800;
+  --color-brand-accent: #bc13fe;
+  --color-bg-dark: #05070a;
+  --color-bg-panel: rgba(10, 15, 25, 0.7);
+  --color-border-glass: rgba(255, 255, 255, 0.1);
+}
+
+:root {
+  --font-mono: 'Space Mono', 'Fira Code', monospace;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--color-bg-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-glass);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+}
+
+/* Neon Glow Effects */
+.glow-primary {
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+.border-glow-primary {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+}
+
+/* Cyber Gradients */
+.grad-cyber {
+  background: linear-gradient(135deg, #00f2ff 0%, #bc13fe 100%);
+}
+
+.grad-dark {
+  background: linear-gradient(180deg, #0a0f1a 0%, #05070a 100%);
+}
+
+/* Animated Background Components */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #05070a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-primary);
+}
