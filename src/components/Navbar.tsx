@@ -80,7 +80,7 @@ export default function Navbar() {
   const handleGitHubLogin = () => {
     const apiBaseUrl =
       import.meta.env.VITE_API_BASE_URL ||
-      "https://kendra-backend.onrender.com";
+      "https://kendra-backend-2kcs.onrender.com";
     
     if (isAuthenticated) {
       window.location.href = `${apiBaseUrl}/api/auth/github/connect?token=${localStorage.getItem("auth_token") || ""}`;

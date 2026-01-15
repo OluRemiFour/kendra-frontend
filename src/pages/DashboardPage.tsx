@@ -193,7 +193,7 @@ export default function DashboardPage() {
 
       const apiBaseUrl =
         import.meta.env.VITE_API_BASE_URL ||
-        "https://kendra-backend.onrender.com";
+        "https://kendra-backend-2kcs.onrender.com";
       const encodedToken = encodeURIComponent(token);
       const githubUrl = `${apiBaseUrl}/api/auth/github/connect?token=${encodedToken}`;
 

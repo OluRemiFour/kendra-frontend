@@ -61,7 +61,7 @@ export default function HomePage() {
       const token = localStorage.getItem("auth_token");
       const apiBaseUrl =
         import.meta.env.VITE_API_BASE_URL ||
-        "https://kendra-backend.onrender.com";
+        "https://kendra-backend-2kcs.onrender.com";
 
       if (!token) {
         console.log("No token, redirecting to direct GitHub login");

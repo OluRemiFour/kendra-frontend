@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://kendra-backend.onrender.com";
+  import.meta.env.VITE_API_BASE_URL || "https://kendra-backend-2kcs.onrender.com";
 
 class ApiClient {
   constructor() {
