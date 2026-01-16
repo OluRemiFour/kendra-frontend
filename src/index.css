@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700;900&family=Outfit:wght@100;300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700;900&family=Outfit:wght@100;300;400;500;700;900&family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
 :root {
   --color-brand-primary: #00f2ff;
@@ -13,6 +13,8 @@
 @theme {
   --font-sans: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
+  --font-display: 'Orbitron', 'Outfit', sans-serif;
+  --font-tech: 'Space Grotesk', 'Inter', sans-serif;
 }
 
 :root {

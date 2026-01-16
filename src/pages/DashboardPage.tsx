@@ -511,7 +511,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-200 font-sans">
+    <div className="min-h-screen bg-bg-dark text-slate-200 font-tech">
       <div className="fixed inset-0 bg-grid z-0 pointer-events-none opacity-40" />
       <Navbar />
 
@@ -569,7 +569,7 @@ export default function DashboardPage() {
                   <Activity className="w-3 h-3 animate-pulse" />
                   System Status: Operational
                 </motion.div>
-                <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-2">
+                <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-2 font-display">
                   CONTROL<span className="text-brand-primary">_CENTER</span>
                 </h1>
                 <p className="text-slate-500 font-light max-w-xl">
@@ -669,7 +669,7 @@ export default function DashboardPage() {
                   <div className="glass-panel border-white/5 p-8 rounded-none relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-brand-primary/20">AUTO_SCAN_v2.0</div>
                     <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-xs font-mono tracking-widest text-slate-500 uppercase">SECURITY_POSTURE_INDEX</h3>
+                      <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">SECURITY_POSTURE_INDEX</h3>
                       <Shield className="w-5 h-5 text-brand-primary" />
                     </div>
                     
@@ -694,7 +694,7 @@ export default function DashboardPage() {
                         
                         <div className="flex-1 space-y-6">
                            <div className="p-4 bg-brand-primary/5 border-l-2 border-brand-primary">
-                              <div className="text-[10px] text-brand-primary font-mono mb-1">HEALTH_ADVISORY</div>
+                              <div className="text-[10px] text-brand-primary font-display mb-1">HEALTH_ADVISORY</div>
                               <div className="text-white text-sm font-light leading-tight">
                                 {securityPosture?.healthAdvisory || "Your attack surface is relatively secure. Review 3 minor logic flaws in payment gateway modules."}
                               </div>
@@ -716,7 +716,7 @@ export default function DashboardPage() {
                   {/* Intelligence Feed / Recent Issues */}
                   <div className="glass-panel border-white/5 rounded-none p-8">
                      <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-xs font-mono tracking-widest text-slate-500 uppercase">THREAT_INTEL_FEED</h3>
+                        <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">THREAT_INTEL_FEED</h3>
                         <Activity className="w-4 h-4 text-brand-primary" />
                      </div>
                      
@@ -749,7 +749,7 @@ export default function DashboardPage() {
                 {/* Side Intelligence Panel */}
                 <div className="space-y-8">
                    <div className="glass-panel border-white/5 p-8 rounded-none">
-                      <h4 className="text-[10px] font-mono tracking-widest text-brand-primary mb-6 uppercase">Active_Agents</h4>
+                      <h4 className="text-[10px] font-display tracking-widest text-brand-primary mb-6 uppercase">Active_Agents</h4>
                       <div className="space-y-6">
                         {[
                           { name: 'KENDRA_SHIELD', action: 'Monitoring Auth Interface', status: 'PROTECTING' },
@@ -771,7 +771,7 @@ export default function DashboardPage() {
                    <div className="glass-panel border-brand-accent/20 bg-brand-accent/5 p-8 rounded-none">
                       <div className="flex items-center gap-3 mb-4 text-brand-accent">
                         <Zap className="w-5 h-5" />
-                        <h4 className="text-xs font-black uppercase tracking-widest">Efficiency_Gains</h4>
+                        <h4 className="text-xs font-black uppercase tracking-widest font-display">Efficiency_Gains</h4>
                       </div>
                       <div className="text-3xl font-black text-white mb-2">-32%</div>
                       <p className="text-[10px] text-slate-400 font-light leading-relaxed">Average reduction in critical vulnerabilities since integration.</p>
@@ -783,7 +783,7 @@ export default function DashboardPage() {
             {activeTab === "repos" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase">MANAGED_SURFACE_NODES</h3>
+                   <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">MANAGED_SURFACE_NODES</h3>
                 </div>
                 {repositories.length === 0 ? (
                   <div className="glass-panel border-white/5 py-24 text-center">
@@ -833,7 +833,7 @@ export default function DashboardPage() {
             {activeTab === "issues" && (
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
-                  <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase">IDENTIFIED_THREAT_DATABASE</h3>
+                  <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">IDENTIFIED_THREAT_DATABASE</h3>
                   <div className="flex gap-4 w-full md:w-auto">
                     <input
                       type="text"

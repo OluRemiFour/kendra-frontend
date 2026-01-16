@@ -81,12 +81,12 @@ export default function APITestingPanel() {
   };
 
   return (
-    <div className="space-y-8 font-sans">
+    <div className="space-y-8 font-tech">
       {/* Test Form */}
       <div className="glass-panel border-white/5 p-8 rounded-none">
         <div className="flex items-center gap-3 mb-6">
           <Shield className="w-6 h-6 text-brand-primary" />
-          <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase">
+          <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">
             API_ENDPOINT_SECURITY_SCANNER
           </h3>
         </div>
