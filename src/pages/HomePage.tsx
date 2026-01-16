@@ -83,7 +83,7 @@ export default function HomePage() {
 
 
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-200 selection:bg-brand-primary/30">
+    <div className="min-h-screen bg-bg-dark text-slate-200 selection:bg-brand-primary/30 font-sans">
       <div className="fixed inset-0 bg-grid z-0 pointer-events-none opacity-50" />
       <div className="fixed inset-0 bg-gradient-to-b from-bg-dark/0 via-bg-dark/50 to-bg-dark z-0 pointer-events-none" />
       

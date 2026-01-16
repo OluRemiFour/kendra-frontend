@@ -68,7 +68,7 @@ export default function SecurityIntelligence({ advisories, loading = false }: Se
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Filter Controls */}
       <div className="flex gap-2">
         {['ALL', 'OFFENSIVE', 'DEFENSIVE'].map((filter) => (

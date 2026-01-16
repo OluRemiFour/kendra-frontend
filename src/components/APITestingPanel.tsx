@@ -81,7 +81,7 @@ export default function APITestingPanel() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 font-sans">
       {/* Test Form */}
       <div className="glass-panel border-white/5 p-8 rounded-none">
         <div className="flex items-center gap-3 mb-6">

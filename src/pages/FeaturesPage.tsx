@@ -21,7 +21,7 @@ import Navbar from "../components/Navbar";
 
 export default function FeaturesPage() {
   return (
-    <div className="min-h-screen bg-bg-dark text-slate-200">
+    <div className="min-h-screen bg-bg-dark text-slate-200 font-sans">
       <div className="fixed inset-0 bg-grid z-0 pointer-events-none opacity-40" />
       <Navbar />
 
