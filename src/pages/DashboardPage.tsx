@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import apiClient from "../lib/api";
+import APITestingPanel from "../components/APITestingPanel";
 
 interface Repository {
   _id: string;
@@ -80,7 +81,7 @@ export default function DashboardPage() {
   const [connecting, setConnecting] = useState(false);
   const [githubConnected, setGithubConnected] = useState(false);
   const [activeTab, setActiveTab] = useState<
-    "overview" | "repos" | "issues" | "prs" | "audit"
+    "overview" | "repos" | "issues" | "prs" | "audit" | "api-testing"
   >("overview");
   const [fixingIssue, setFixingIssue] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState<string | null>(null);
@@ -92,6 +93,7 @@ export default function DashboardPage() {
   const [expandedIssue, setExpandedIssue] = useState<string | null>(null);
   const [expandedAuditLog, setExpandedAuditLog] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
+  const [securityPosture, setSecurityPosture] = useState<any>(null);
 
  
   // ==================== 2. UTILITY FUNCTIONS ====================
@@ -166,6 +168,14 @@ export default function DashboardPage() {
       // Fetch audit logs
       const auditData = await apiClient.getAuditLogs({ limit: 50 });
       setAuditLogs(auditData.logs || []);
+
+      // Fetch security posture
+      try {
+        const postureData = await apiClient.getSecurityPosture();
+        setSecurityPosture(postureData.posture);
+      } catch (error) {
+        console.log("ℹ️ Security posture not available yet");
+      }
 
       return reposData.repositories.length;
     } catch (error: any) {
@@ -623,17 +633,17 @@ export default function DashboardPage() {
 
           {/* Tabs - Responsive Scrollable */}
           <div className="flex gap-8 mb-10 border-b border-white/5 overflow-x-auto">
-            {["overview", "repos", "issues", "prs", "audit"].map((tab) => (
+            {["overview", "repos", "issues", "prs", "audit", "api-testing"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
-                className={`py-4 text-[10px] font-mono tracking-[0.2em] uppercase transition-all relative ${
+                className={`py-4 text-[10px] font-mono tracking-[0.2em] uppercase transition-all relative whitespace-nowrap ${
                   activeTab === tab
                     ? "text-brand-primary"
                     : "text-slate-500 hover:text-slate-300"
                 }`}
               >
-                {tab === "prs" ? "PULL_REQUESTS" : tab === "audit" ? "INTEL_LOGS" : tab === "repos" ? "SURFACE_NODES" : tab.toUpperCase()}
+                {tab === "prs" ? "PULL_REQUESTS" : tab === "audit" ? "INTEL_LOGS" : tab === "repos" ? "SURFACE_NODES" : tab === "api-testing" ? "API_TESTING" : tab.toUpperCase()}
                 {activeTab === tab && (
                   <motion.div 
                     layoutId="activeTab"
@@ -663,42 +673,44 @@ export default function DashboardPage() {
                       <Shield className="w-5 h-5 text-brand-primary" />
                     </div>
                     
-                    <div className="flex items-end gap-10">
-                       <div className="relative w-40 h-40">
-                          <svg className="w-full h-full transform -rotate-90">
-                            <circle cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" className="text-white/5" />
-                            <motion.circle 
+                     <div className="flex items-end gap-10">
+                        <div className="relative w-40 h-40">
+                           <svg className="w-full h-full transform -rotate-90">
+                             <circle cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" className="text-white/5" />
+                             <motion.circle 
                               cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" 
                               strokeDasharray={440} 
                               initial={{ strokeDashoffset: 440 }}
-                              animate={{ strokeDashoffset: 440 - (440 * 0.92) }}
+                              animate={{ strokeDashoffset: 440 - (440 * ((securityPosture?.postureIndex || 92) / 100)) }}
                               transition={{ duration: 1.5, ease: "easeOut" }}
                               className="text-brand-primary" 
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <div className="text-4xl font-black text-white">92</div>
-                            <div className="text-[10px] text-brand-primary font-mono lowercase">verified</div>
-                          </div>
-                       </div>
-                       
-                       <div className="flex-1 space-y-6">
-                          <div className="p-4 bg-brand-primary/5 border-l-2 border-brand-primary">
-                             <div className="text-[10px] text-brand-primary font-mono mb-1">HEALTH_ADVISORY</div>
-                             <div className="text-white text-sm font-light leading-tight">Your attack surface is relatively secure. Review 3 minor logic flaws in payment gateway modules.</div>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
-                             <div>
-                                <div className="text-[8px] text-slate-600 font-mono tracking-widest mb-1 uppercase">UPTIME_LAST_24H</div>
-                                <div className="text-xl font-black text-white">99.98%</div>
-                             </div>
-                             <div>
-                                <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-1 uppercase">AVG_RESPONSE</div>
-                                <div className="text-xl font-black text-white">124ms</div>
-                             </div>
-                          </div>
-                       </div>
-                    </div>
+                             />
+                           </svg>
+                           <div className="absolute inset-0 flex flex-col items-center justify-center">
+                             <div className="text-4xl font-black text-white">{securityPosture?.postureIndex || 92}</div>
+                             <div className="text-[10px] text-brand-primary font-mono lowercase">{securityPosture?.trend || 'stable'}</div>
+                           </div>
+                        </div>
+                        
+                        <div className="flex-1 space-y-6">
+                           <div className="p-4 bg-brand-primary/5 border-l-2 border-brand-primary">
+                              <div className="text-[10px] text-brand-primary font-mono mb-1">HEALTH_ADVISORY</div>
+                              <div className="text-white text-sm font-light leading-tight">
+                                {securityPosture?.healthAdvisory || "Your attack surface is relatively secure. Review 3 minor logic flaws in payment gateway modules."}
+                              </div>
+                           </div>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                 <div className="text-[8px] text-slate-600 font-mono tracking-widest mb-1 uppercase">COVERAGE</div>
+                                 <div className="text-xl font-black text-white">{securityPosture?.coverage?.percentage || 0}%</div>
+                              </div>
+                              <div>
+                                 <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-1 uppercase">RECENT_FIXES</div>
+                                 <div className="text-xl font-black text-white">{securityPosture?.activity?.mergedPRs || 0}</div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
                   </div>
 
                   {/* Intelligence Feed / Recent Issues */}
@@ -984,13 +996,22 @@ export default function DashboardPage() {
                           <div className={`w-1 h-4 ${log.approved ? 'bg-brand-primary' : 'bg-red-500'}`} />
                           <div className="flex-1">
                              <div className="text-white text-sm font-bold truncate">{log.action}</div>
-                             <div className="text-[10px] text-slate-500 font-mono uppercase italic">{log.agentName} @ {log.riskLevel} RISK</div>
+                             <div className="text-[10px] font-mono text-slate-500 uppercase italic">{log.agentName} @ {log.riskLevel} RISK</div>
                           </div>
                           <div className="text-[10px] font-mono text-slate-600">{log.approved ? 'AUTHORIZED' : 'BLOCKED'}</div>
                        </div>
-                    </div>
+                     </div>
                   ))
                 )}
+              </div>
+            )}
+
+            {activeTab === "api-testing" && (
+              <div className="space-y-6">
+                <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase mb-6">
+                  API_ENDPOINT_SECURITY_TESTING
+                </h3>
+                <APITestingPanel />
               </div>
             )}
           </motion.div>

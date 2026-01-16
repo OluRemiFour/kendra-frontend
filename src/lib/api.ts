@@ -260,6 +260,32 @@ class ApiClient {
   getUpdatedPullRequests(repositoryId) {
     return this.request(`/api/stats/${repositoryId}`);
   }
+
+  // ========== SECURITY ENDPOINTS ==========
+
+  // Get security posture
+  getSecurityPosture() {
+    return this.request("/api/stats/security-posture");
+  }
+
+  // Get threats for repository
+  getThreats(repositoryId) {
+    return this.request(`/api/issues/threats/${repositoryId}`);
+  }
+
+  // Test API endpoint security
+  testAPIEndpoint(endpoint, method = "GET", headers = {}) {
+    return this.request("/api/issues/test-endpoint", {
+      method: "POST",
+      body: { endpoint, method, headers },
+    });
+  }
+
+  // Get penetration test report
+  getPenTestReport(repositoryId) {
+    return this.request(`/api/issues/pen-test-report/${repositoryId}`);
+  }
+
   // ========== DEBUG ENDPOINTS ==========
 
   // Debug GitHub connection
