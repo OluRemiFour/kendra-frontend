@@ -10,8 +10,12 @@
   --color-border-glass: rgba(255, 255, 255, 0.1);
 }
 
-:root {
+@theme {
+  --font-sans: 'Roboto', system-ui, -apple-system, sans-serif;
   --font-mono: 'Space Mono', 'Fira Code', monospace;
+}
+
+:root {
   color-scheme: dark;
 }
 
