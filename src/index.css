@@ -11,9 +11,9 @@
 }
 
 @theme {
-  --font-sans: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Roboto', 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
-  --font-display: 'Orbitron', 'Outfit', sans-serif;
+  --font-display: 'Roboto', 'Orbitron', 'Outfit', sans-serif;
   --font-tech: 'Roboto', 'JetBrains Mono', 'Space Grotesk', 'Inter', sans-serif;
 }
 
