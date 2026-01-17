@@ -14,7 +14,7 @@
   --font-sans: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
   --font-display: 'Orbitron', 'Outfit', sans-serif;
-  --font-tech: 'Space Grotesk', 'Inter', sans-serif;
+  --font-tech: 'JetBrains Mono', 'Space Grotesk', 'Inter', sans-serif;
 }
 
 :root {
@@ -24,7 +24,7 @@
 body {
   background-color: var(--color-bg-dark);
   color: #e2e8f0;
-  font-family: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: 'JetBrains Mono', 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
