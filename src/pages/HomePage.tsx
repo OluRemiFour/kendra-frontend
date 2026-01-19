@@ -12,6 +12,7 @@ import {
   Loader2,
   Server,
   Shield,
+  TrendingUp,
   X,
   XCircle,
   Zap,
@@ -114,16 +115,18 @@ export default function HomePage() {
               </span>
             </motion.div>
 
-            <h1 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] text-white">
-              AUTOMATE YOUR<br />
+            <h1 className="text-5xl uppercase md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] text-white">
+              {/* AUTOMATE YOUR<br /> */}
+             Autonomous AI <br />
               <span className="bg-gradient-to-r from-brand-primary via-blue-400 to-brand-accent bg-clip-text text-transparent">
-                SECURITY OPS
+                {/* SECURITY OPS */}
+                DevOps Engineer
               </span>
             </h1>
 
             <p className="text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-              Autonomous AI that identifies attack surfaces, scans API endpoints, and secures your infrastructure—keeping your production sacred and your developers fast.
-            </p>
+              {/* Autonomous AI that identifies attack surfaces, scans API endpoints, and secures your infrastructure—keeping your production sacred and your developers fast. */}
+It reviews your codebase, finds bugs and security flaws, scans live API endpoints for vulnerabilities, and autonomously creates pull requests to fix what’s broken.            </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20">
               <Link
@@ -199,6 +202,24 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-1 px-4 lg:px-0 bg-white/5 border border-white/5">
             {[
+              {
+                icon: CheckCircle,
+                title: "Human-in-the-Loop Safety",
+                desc: "Every change requires approval. Never pushes to protected branches. All actions are auditable and reversible.",
+                color: "brand-primary"
+              },
+              {
+                icon: GitPullRequest,
+                title: "Production-Ready PRs",
+                desc: "Opens detailed pull requests with context, risk assessment, and reasoning—not just code dumps.",
+                color: "brand-secondary"
+              },
+              {
+                icon: TrendingUp,
+                title: "Real Performance Gains",
+                desc: "Measurable improvements: 40% faster CI builds, 60% fewer re-renders, 30% smaller bundles.",
+                color: "brand-accent"
+              },
               {
                 icon: Shield,
                 title: "PEN-TEST GUIDANCE",
