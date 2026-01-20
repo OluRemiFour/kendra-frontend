@@ -96,7 +96,7 @@ export default function DashboardPage() {
   const [securityPosture, setSecurityPosture] = useState<any>(null);
 
  
-  // ==================== 2. UTILITY FUNCTIONS ====================
+  
   const showToast = (type: "success" | "error" | "info", message: string) => {
     const id = Date.now().toString();
     setToasts((prev) => [...prev, { id, type, message }]);
@@ -149,27 +149,27 @@ export default function DashboardPage() {
     }
   };
 
-  // ==================== 3. DATA FETCHING FUNCTIONS ====================
+  
   const fetchAllData = async () => {
     try {
 
-      // Fetch repositories
+      
       const reposData = await apiClient.getRepositories();
       setRepositories(reposData.repositories);
 
-      // Fetch issues
+      
       const issuesData = await apiClient.getIssues();
       setIssues(issuesData.issues || []);
 
-      // Fetch pull requests
+      
       const prsData = await apiClient.getPullRequests();
       setPullRequests(prsData.pullRequests || []);
 
-      // Fetch audit logs
+      
       const auditData = await apiClient.getAuditLogs({ limit: 50 });
       setAuditLogs(auditData.logs || []);
 
-      // Fetch security posture
+      
       try {
         const postureData = await apiClient.getSecurityPosture();
         setSecurityPosture(postureData.posture);
@@ -184,7 +184,7 @@ export default function DashboardPage() {
     }
   };
 
-  // ==================== 4. EVENT HANDLERS ====================
+  
   const handleConnectGitHub = async () => {
     console.log("🔄 Starting GitHub connection...");
     setConnecting(true);
@@ -233,7 +233,7 @@ export default function DashboardPage() {
             setSyncing(false);
             return;
           } else {
-            // Connection exists but state is wrong, update it
+            
             console.log("✅ GitHub is connected, updating state");
             setGithubConnected(true);
           }
@@ -246,10 +246,13 @@ export default function DashboardPage() {
       }
 
       const result = await apiClient.syncRepositories();
+      
+      
+      await apiClient.syncPullRequests();
 
       console.log("✅ Sync result:", result);
 
-      // Update local state
+      
       if (result.repositories) {
         setRepositories(result.repositories);
       }
@@ -265,7 +268,7 @@ export default function DashboardPage() {
         );
       }
 
-      // Show warning if there were errors
+      
       if (result.errors && result.errors.length > 0) {
         console.warn("⚠️ Some repos had sync errors:", result.errors);
         showToast(
@@ -273,6 +276,8 @@ export default function DashboardPage() {
           `${result.errors.length} repositories had sync issues`
         );
       }
+      
+      await fetchAllData();
     } catch (error: any) {
       console.error("❌ Failed to sync GitHub:", error);
 
@@ -302,16 +307,16 @@ export default function DashboardPage() {
   };
 
   const handleAnalyzeRepo = async (repoId: string, repoName: string) => {
-    // console.log("🔍 Analyzing repository:", repoName);
+    
     setAnalyzing(repoId);
 
     try {
       showToast("info", `Starting analysis of ${repoName}...`);
 
-      // Call analysis endpoint
+      
       const result = await apiClient.analyzeRepository(repoId);
 
-      // console.log("✅ Analysis result:", result);
+      
       const updatePullRequest = await apiClient.getUpdatedPullRequests(repoId);
       console.log("✅ Updated PRs after analysis:", updatePullRequest);
 
@@ -337,23 +342,23 @@ export default function DashboardPage() {
   };
 
   const handleFixIssue = async (issue: Issue) => {
-    // console.log("🔧 Fixing issue:", issue.title);
+    
     setFixingIssue(issue._id);
 
     try {
       showToast("info", "Generating fix and creating pull request...");
 
-      // Call fix endpoint
+      
       const result = await apiClient.fixIssue(issue._id);
 
-      // console.log("✅ Fix result:", result);
+      
 
       showToast(
         "success",
         `Fix created! PR #${result.prNumber} is ready for review`
       );
 
-      // Refresh data to update issue, PR lists, and audit logs
+      
       await fetchAllData();
 
       setActiveTab("prs");
@@ -366,7 +371,7 @@ export default function DashboardPage() {
   };
 
   const handleSignOut = async () => {
-    // console.log("👋 Signing out...");
+    
 
     try {
       await apiClient.logout();
@@ -378,7 +383,7 @@ export default function DashboardPage() {
     }
   };
 
-  // ==================== 6. EFFECTS ====================
+  
   useEffect(() => {
     const initializeDashboard = async () => {
       setLoading(true);
@@ -402,7 +407,7 @@ export default function DashboardPage() {
         const githubUsername = urlParams.get("username");
 
         if (githubConnectedParam === "true") {
-          // console.log("✅ GitHub connected successfully:", githubUsername);
+          
           showToast("success", `GitHub connected as @${githubUsername}!`);
           setGithubConnected(true);
 
@@ -475,12 +480,12 @@ export default function DashboardPage() {
     initializeDashboard();
   }, []);
 
-  // ==================== STATS CALCULATION ====================
+  
   const stats = {
     totalRepos: repositories.length,
     activeRepos: repositories.filter((r) => r.isActive).length,
     openIssues: issues.filter(
-      (i) => i.status !== "resolved" && i.status !== "ignored"
+      (i) => i.status !== "resolved" && i.status !== "ignored" && i.status !== "pr-created"
     ).length,
     openPRs: pullRequests.filter((pr) => pr.status === "open").length,
     criticalIssues: issues.filter(
@@ -488,7 +493,7 @@ export default function DashboardPage() {
     ).length,
   };
 
-  // ==================== FILTERED ISSUES ====================
+  
   const filteredIssues = issues.filter((issue) => {
     const matchesSearch =
       !issueSearch ||
@@ -498,10 +503,11 @@ export default function DashboardPage() {
         issue.filePath.toLowerCase().includes(issueSearch.toLowerCase()));
     const matchesSeverity =
       issueSeverityFilter === "all" || issue.severity === issueSeverityFilter;
-    return matchesSearch && matchesSeverity;
+    const isActionable = issue.status !== "resolved" && issue.status !== "ignored" && issue.status !== "pr-created";
+    return matchesSearch && matchesSeverity && isActionable;
   });
 
-  // ==================== RENDER LOGIC ====================
+  
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
@@ -515,7 +521,7 @@ export default function DashboardPage() {
       <div className="fixed inset-0 bg-grid z-0 pointer-events-none opacity-40" />
       <Navbar />
 
-      {/* Toast Notifications */}
+      {}
       <AnimatePresence>
         {toasts.map((toast) => (
           <motion.div
@@ -553,7 +559,7 @@ export default function DashboardPage() {
 
       <div className="pt-24 md:pt-32 pb-20 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
+          {}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -605,7 +611,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Stats - Tech Grid Style */}
+            {}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white/5 border border-white/5">
               {[
                 { label: "SURFACES_MONITORED", value: stats.totalRepos, icon: GitBranch, color: "brand-primary" },
@@ -631,7 +637,7 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          {/* Tabs - Responsive Scrollable */}
+          {}
           <div className="flex gap-8 mb-10 border-b border-white/5 overflow-x-auto">
             {["overview", "repos", "issues", "prs", "audit", "api-testing"].map((tab) => (
               <button
@@ -654,7 +660,7 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Tab Content */}
+          {}
           <motion.div
             key={activeTab}
             initial={{ opacity: 0, y: 20 }}
@@ -664,7 +670,7 @@ export default function DashboardPage() {
           >
             {activeTab === "overview" && (
               <div className="grid lg:grid-cols-3 gap-8">
-                {/* Security Posture Widget */}
+                {}
                 <div className="lg:col-span-2 space-y-8">
                   <div className="glass-panel border-white/5 p-8 rounded-none relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-brand-primary/20">AUTO_SCAN_v2.0</div>
@@ -713,7 +719,7 @@ export default function DashboardPage() {
                      </div>
                   </div>
 
-                  {/* Intelligence Feed / Recent Issues */}
+                  {}
                   <div className="glass-panel border-white/5 rounded-none p-8">
                      <div className="flex items-center justify-between mb-8">
                         <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">THREAT_INTEL_FEED</h3>
@@ -746,7 +752,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Side Intelligence Panel */}
+                {}
                 <div className="space-y-8">
                    <div className="glass-panel border-white/5 p-8 rounded-none">
                       <h4 className="text-[10px] font-display tracking-widest text-brand-primary mb-6 uppercase">Active_Agents</h4>
