@@ -1,77 +1,92 @@
-# React + TypeScript + Vite
+AI DevOps Dashboard – Frontend
+Overview
+This frontend provides a clean, intuitive interface for interacting with the AI DevOps platform.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Users can:
+Sign in with Github
+Connect GitHub repositories
+Trigger AI-powered analysis
+View detected issues
+Track severity & confidence
+Monitor automated fixes and PRs
+Designed for clarity, speed, and demo impact.
 
-Currently, two official plugins are available:
+Features:
+GitHub Repository Connection
+Repository Overview
+One-click AI Analysis
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Issue Dashboard:
+Severity levels
+Confidence indicators
+File-level insights
 
-## React Compiler
+Security Findings View
+API endpoint risks
+Auth & validation gaps
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+Analysis Status Tracking
+Running
+Completed
+Failed (with clear feedback)
 
-Note: This will impact Vite dev & build performances.
+Design Philosophy
+Minimal cognitive load
+Clear visual hierarchy
+Hackathon-friendly demo flow
+Built for developers, not managers
 
-## Expanding the ESLint configuration
+Tech Stack
+Framework: React / Next.js
+Styling: Tailwind CSS
+State: React hooks / Context
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+API Layer: REST
+Icons: Lucide / Heroicons
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Project Structure
+frontend/
+│
+├── components/
+│   ├── Repo cards
+│   ├── Issue lists
+│   └── Status indicators
+│
+├── pages/
+│   ├── Dashboard
+│   ├── Repository view
+│   └── Analysis results
+│
+├── services/
+│   └── API client
+│
+└── styles/
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Running Locally
+npm install
+npm run dev
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x), [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom), and [eslint-plugin-react-hooks](https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks) for React-specific lint rules:
+Frontend runs on:
+http://localhost:3000
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-import reactHooks from 'eslint-plugin-react-hooks'
+Backend Integration
+Ensure backend is running and set:
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-      // Enable lint rules for React Hooks
-      reactHooks.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Demo Tips:
+For best demo impact:
+Connect a repo with known issues
+Run analysis live
+Show detected issues
+Highlight auto-fix + PR creation
+Emphasize security scanning
+
+Future UI Enhancements:
+Live analysis streaming
+Fix preview diffs
+Risk heatmaps
+Repo Q&A (chat with your code)
+
+Final Note:
+This frontend is designed to show AI in action, not just results  making complex DevOps workflows approachable, fast, and visual.
