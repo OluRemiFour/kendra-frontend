@@ -12,7 +12,7 @@ import {
   Loader2,
   Shield,
   XCircle,
-  Zap
+  Zap,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
@@ -95,8 +95,6 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [securityPosture, setSecurityPosture] = useState<any>(null);
 
- 
-  
   const showToast = (type: "success" | "error" | "info", message: string) => {
     const id = Date.now().toString();
     setToasts((prev) => [...prev, { id, type, message }]);
@@ -149,27 +147,20 @@ export default function DashboardPage() {
     }
   };
 
-  
   const fetchAllData = async () => {
     try {
-
-      
       const reposData = await apiClient.getRepositories();
       setRepositories(reposData.repositories);
 
-      
       const issuesData = await apiClient.getIssues();
       setIssues(issuesData.issues || []);
 
-      
       const prsData = await apiClient.getPullRequests();
       setPullRequests(prsData.pullRequests || []);
 
-      
       const auditData = await apiClient.getAuditLogs({ limit: 50 });
       setAuditLogs(auditData.logs || []);
 
-      
       try {
         const postureData = await apiClient.getSecurityPosture();
         setSecurityPosture(postureData.posture);
@@ -184,7 +175,6 @@ export default function DashboardPage() {
     }
   };
 
-  
   const handleConnectGitHub = async () => {
     console.log("🔄 Starting GitHub connection...");
     setConnecting(true);
@@ -203,7 +193,7 @@ export default function DashboardPage() {
 
       const apiBaseUrl =
         import.meta.env.VITE_API_BASE_URL ||
-        "https://kendra-backend-2kcs.onrender.com";
+        "https://kendra-backend-yc18.onrender.com";
       const encodedToken = encodeURIComponent(token);
       const githubUrl = `${apiBaseUrl}/api/auth/github/connect?token=${encodedToken}`;
 
@@ -233,7 +223,6 @@ export default function DashboardPage() {
             setSyncing(false);
             return;
           } else {
-            
             console.log("✅ GitHub is connected, updating state");
             setGithubConnected(true);
           }
@@ -246,13 +235,11 @@ export default function DashboardPage() {
       }
 
       const result = await apiClient.syncRepositories();
-      
-      
+
       await apiClient.syncPullRequests();
 
       console.log("✅ Sync result:", result);
 
-      
       if (result.repositories) {
         setRepositories(result.repositories);
       }
@@ -264,19 +251,18 @@ export default function DashboardPage() {
       } else {
         showToast(
           "success",
-          `Successfully synced ${syncCount} repositories from GitHub!`
+          `Successfully synced ${syncCount} repositories from GitHub!`,
         );
       }
 
-      
       if (result.errors && result.errors.length > 0) {
         console.warn("⚠️ Some repos had sync errors:", result.errors);
         showToast(
           "info",
-          `${result.errors.length} repositories had sync issues`
+          `${result.errors.length} repositories had sync issues`,
         );
       }
-      
+
       await fetchAllData();
     } catch (error: any) {
       console.error("❌ Failed to sync GitHub:", error);
@@ -307,28 +293,25 @@ export default function DashboardPage() {
   };
 
   const handleAnalyzeRepo = async (repoId: string, repoName: string) => {
-    
     setAnalyzing(repoId);
 
     try {
       showToast("info", `Starting analysis of ${repoName}...`);
 
-      
       const result = await apiClient.analyzeRepository(repoId);
 
-      
       const updatePullRequest = await apiClient.getUpdatedPullRequests(repoId);
       console.log("✅ Updated PRs after analysis:", updatePullRequest);
 
       if (result.issuesFound === 0) {
         showToast(
           "info",
-          `Analysis complete! No issues found in ${repoName}. This could mean the code is clean or the AI needs more context.`
+          `Analysis complete! No issues found in ${repoName}. This could mean the code is clean or the AI needs more context.`,
         );
       } else {
         showToast(
           "success",
-          `Analysis complete! Found ${result.issuesFound} issues (${result.critical} critical)`
+          `Analysis complete! Found ${result.issuesFound} issues (${result.critical} critical)`,
         );
       }
 
@@ -342,23 +325,18 @@ export default function DashboardPage() {
   };
 
   const handleFixIssue = async (issue: Issue) => {
-    
     setFixingIssue(issue._id);
 
     try {
       showToast("info", "Generating fix and creating pull request...");
 
-      
       const result = await apiClient.fixIssue(issue._id);
-
-      
 
       showToast(
         "success",
-        `Fix created! PR #${result.prNumber} is ready for review`
+        `Fix created! PR #${result.prNumber} is ready for review`,
       );
 
-      
       await fetchAllData();
 
       setActiveTab("prs");
@@ -371,8 +349,6 @@ export default function DashboardPage() {
   };
 
   const handleSignOut = async () => {
-    
-
     try {
       await apiClient.logout();
     } catch (error) {
@@ -383,7 +359,6 @@ export default function DashboardPage() {
     }
   };
 
-  
   useEffect(() => {
     const initializeDashboard = async () => {
       setLoading(true);
@@ -399,7 +374,7 @@ export default function DashboardPage() {
           window.history.replaceState(
             {},
             document.title,
-            newUrl.pathname + newUrl.search
+            newUrl.pathname + newUrl.search,
           );
         }
 
@@ -407,7 +382,6 @@ export default function DashboardPage() {
         const githubUsername = urlParams.get("username");
 
         if (githubConnectedParam === "true") {
-          
           showToast("success", `GitHub connected as @${githubUsername}!`);
           setGithubConnected(true);
 
@@ -417,7 +391,7 @@ export default function DashboardPage() {
           window.history.replaceState(
             {},
             document.title,
-            newUrl.pathname + newUrl.search
+            newUrl.pathname + newUrl.search,
           );
         }
 
@@ -433,7 +407,7 @@ export default function DashboardPage() {
           window.history.replaceState(
             {},
             document.title,
-            newUrl.pathname + newUrl.search
+            newUrl.pathname + newUrl.search,
           );
         }
 
@@ -480,20 +454,21 @@ export default function DashboardPage() {
     initializeDashboard();
   }, []);
 
-  
   const stats = {
     totalRepos: repositories.length,
     activeRepos: repositories.filter((r) => r.isActive).length,
     openIssues: issues.filter(
-      (i) => i.status !== "resolved" && i.status !== "ignored" && i.status !== "pr-created"
+      (i) =>
+        i.status !== "resolved" &&
+        i.status !== "ignored" &&
+        i.status !== "pr-created",
     ).length,
     openPRs: pullRequests.filter((pr) => pr.status === "open").length,
     criticalIssues: issues.filter(
-      (i) => i.severity === "CRITICAL" && i.status !== "resolved"
+      (i) => i.severity === "CRITICAL" && i.status !== "resolved",
     ).length,
   };
 
-  
   const filteredIssues = issues.filter((issue) => {
     const matchesSearch =
       !issueSearch ||
@@ -503,11 +478,13 @@ export default function DashboardPage() {
         issue.filePath.toLowerCase().includes(issueSearch.toLowerCase()));
     const matchesSeverity =
       issueSeverityFilter === "all" || issue.severity === issueSeverityFilter;
-    const isActionable = issue.status !== "resolved" && issue.status !== "ignored" && issue.status !== "pr-created";
+    const isActionable =
+      issue.status !== "resolved" &&
+      issue.status !== "ignored" &&
+      issue.status !== "pr-created";
     return matchesSearch && matchesSeverity && isActionable;
   });
 
-  
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
@@ -536,8 +513,8 @@ export default function DashboardPage() {
                 toast.type === "success"
                   ? "bg-emerald-900/90 border-emerald-500 text-emerald-100"
                   : toast.type === "error"
-                  ? "bg-red-900/90 border-red-500 text-red-100"
-                  : "bg-cyan-900/90 border-cyan-500 text-cyan-100"
+                    ? "bg-red-900/90 border-red-500 text-red-100"
+                    : "bg-cyan-900/90 border-cyan-500 text-cyan-100"
               } backdrop-blur-sm`}
             >
               <div className="flex items-center gap-3">
@@ -567,7 +544,7 @@ export default function DashboardPage() {
           >
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
               <div>
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="text-brand-primary font-mono text-xs tracking-widest uppercase mb-2 flex items-center gap-2"
@@ -579,7 +556,8 @@ export default function DashboardPage() {
                   CONTROL<span className="text-brand-primary">_CENTER</span>
                 </h1>
                 <p className="text-slate-500 font-light max-w-xl">
-                  Monitoring {stats.totalRepos} target surfaces. Last heartbeat check: {new Date().toLocaleTimeString()}.
+                  Monitoring {stats.totalRepos} target surfaces. Last heartbeat
+                  check: {new Date().toLocaleTimeString()}.
                 </p>
               </div>
               <div className="flex flex-wrap gap-4">
@@ -589,7 +567,11 @@ export default function DashboardPage() {
                     disabled={connecting}
                     className="px-6 py-3 bg-brand-primary text-bg-dark font-black transition-all hover:shadow-[0_0_20px_rgba(0,242,255,0.3)] disabled:opacity-50 uppercase tracking-tighter text-sm flex items-center gap-2"
                   >
-                    {connecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <GitBranch className="w-4 h-4" />}
+                    {connecting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <GitBranch className="w-4 h-4" />
+                    )}
                     INIT_GITHUB_AUTH
                   </button>
                 ) : (
@@ -598,7 +580,11 @@ export default function DashboardPage() {
                     disabled={syncing}
                     className="px-6 py-3 glass-panel text-white font-black hover:bg-white/5 transition-all disabled:opacity-50 uppercase tracking-tighter text-sm flex items-center gap-2 border-white/10"
                   >
-                    {syncing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Activity className="w-4 h-4" />}
+                    {syncing ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Activity className="w-4 h-4" />
+                    )}
                     SYNC_SURFACES
                   </button>
                 )}
@@ -614,24 +600,51 @@ export default function DashboardPage() {
             {}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1 bg-white/5 border border-white/5">
               {[
-                { label: "SURFACES_MONITORED", value: stats.totalRepos, icon: GitBranch, color: "brand-primary" },
-                { label: "ACTIVE_PIPELINES", value: stats.activeRepos, icon: Activity, color: "emerald-400" },
-                { label: "DETECTED_THREATS", value: stats.openIssues, icon: AlertTriangle, color: "yellow-400" },
-                { label: "AUTONOMOUS_FIXES", value: stats.openPRs, icon: GitPullRequest, color: "brand-accent" }
+                {
+                  label: "SURFACES_MONITORED",
+                  value: stats.totalRepos,
+                  icon: GitBranch,
+                  color: "brand-primary",
+                },
+                {
+                  label: "ACTIVE_PIPELINES",
+                  value: stats.activeRepos,
+                  icon: Activity,
+                  color: "emerald-400",
+                },
+                {
+                  label: "DETECTED_THREATS",
+                  value: stats.openIssues,
+                  icon: AlertTriangle,
+                  color: "yellow-400",
+                },
+                {
+                  label: "AUTONOMOUS_FIXES",
+                  value: stats.openPRs,
+                  icon: GitPullRequest,
+                  color: "brand-accent",
+                },
               ].map((stat, i) => (
-                <div key={i} className="bg-bg-dark p-8 group overflow-hidden relative">
-                   <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                      <stat.icon className="w-32 h-32" />
-                   </div>
-                   <div className="relative z-10">
-                      <div className={`text-${stat.color} mb-4 font-mono text-[10px] tracking-widest`}>
-                        {stat.label}
-                      </div>
-                      <div className="text-4xl font-black text-white flex items-baseline gap-2">
-                        {stat.value}
-                        <span className="text-[10px] text-slate-600 font-mono tracking-tighter uppercase">node_active</span>
-                      </div>
-                   </div>
+                <div
+                  key={i}
+                  className="bg-bg-dark p-8 group overflow-hidden relative"
+                >
+                  <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                    <stat.icon className="w-32 h-32" />
+                  </div>
+                  <div className="relative z-10">
+                    <div
+                      className={`text-${stat.color} mb-4 font-mono text-[10px] tracking-widest`}
+                    >
+                      {stat.label}
+                    </div>
+                    <div className="text-4xl font-black text-white flex items-baseline gap-2">
+                      {stat.value}
+                      <span className="text-[10px] text-slate-600 font-mono tracking-tighter uppercase">
+                        node_active
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -639,25 +652,35 @@ export default function DashboardPage() {
 
           {}
           <div className="flex gap-8 mb-10 border-b border-white/5 overflow-x-auto">
-            {["overview", "repos", "issues", "prs", "audit", "api-testing"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab as any)}
-                className={`py-4 text-[10px] font-mono tracking-[0.2em] uppercase transition-all relative whitespace-nowrap ${
-                  activeTab === tab
-                    ? "text-brand-primary"
-                    : "text-slate-500 hover:text-slate-300"
-                }`}
-              >
-                {tab === "prs" ? "PULL_REQUESTS" : tab === "audit" ? "INTEL_LOGS" : tab === "repos" ? "SURFACE_NODES" : tab === "api-testing" ? "API_TESTING" : tab.toUpperCase()}
-                {activeTab === tab && (
-                  <motion.div 
-                    layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary glow-primary shadow-[0_0_10px_#00f2ff]"
-                  />
-                )}
-              </button>
-            ))}
+            {["overview", "repos", "issues", "prs", "audit", "api-testing"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab as any)}
+                  className={`py-4 text-[10px] font-mono tracking-[0.2em] uppercase transition-all relative whitespace-nowrap ${
+                    activeTab === tab
+                      ? "text-brand-primary"
+                      : "text-slate-500 hover:text-slate-300"
+                  }`}
+                >
+                  {tab === "prs"
+                    ? "PULL_REQUESTS"
+                    : tab === "audit"
+                      ? "INTEL_LOGS"
+                      : tab === "repos"
+                        ? "SURFACE_NODES"
+                        : tab === "api-testing"
+                          ? "API_TESTING"
+                          : tab.toUpperCase()}
+                  {activeTab === tab && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary glow-primary shadow-[0_0_10px_#00f2ff]"
+                    />
+                  )}
+                </button>
+              ),
+            )}
           </div>
 
           {}
@@ -673,115 +696,199 @@ export default function DashboardPage() {
                 {}
                 <div className="lg:col-span-2 space-y-8">
                   <div className="glass-panel border-white/5 p-8 rounded-none relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-brand-primary/20">AUTO_SCAN_v2.0</div>
+                    <div className="absolute top-0 right-0 p-4 font-mono text-[8px] text-brand-primary/20">
+                      AUTO_SCAN_v2.0
+                    </div>
                     <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">SECURITY_POSTURE_INDEX</h3>
+                      <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">
+                        SECURITY_POSTURE_INDEX
+                      </h3>
                       <Shield className="w-5 h-5 text-brand-primary" />
                     </div>
-                    
-                     <div className="flex items-end gap-10">
-                        <div className="relative w-40 h-40">
-                           <svg className="w-full h-full transform -rotate-90">
-                             <circle cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" className="text-white/5" />
-                             <motion.circle 
-                              cx="80" cy="80" r="70" fill="transparent" stroke="currentColor" strokeWidth="8" 
-                              strokeDasharray={440} 
-                              initial={{ strokeDashoffset: 440 }}
-                              animate={{ strokeDashoffset: 440 - (440 * ((securityPosture?.postureIndex || 92) / 100)) }}
-                              transition={{ duration: 1.5, ease: "easeOut" }}
-                              className="text-brand-primary" 
-                             />
-                           </svg>
-                           <div className="absolute inset-0 flex flex-col items-center justify-center">
-                             <div className="text-4xl font-black text-white">{securityPosture?.postureIndex || 92}</div>
-                             <div className="text-[10px] text-brand-primary font-mono lowercase">{securityPosture?.trend || 'stable'}</div>
-                           </div>
+
+                    <div className="flex items-end gap-10">
+                      <div className="relative w-40 h-40">
+                        <svg className="w-full h-full transform -rotate-90">
+                          <circle
+                            cx="80"
+                            cy="80"
+                            r="70"
+                            fill="transparent"
+                            stroke="currentColor"
+                            strokeWidth="8"
+                            className="text-white/5"
+                          />
+                          <motion.circle
+                            cx="80"
+                            cy="80"
+                            r="70"
+                            fill="transparent"
+                            stroke="currentColor"
+                            strokeWidth="8"
+                            strokeDasharray={440}
+                            initial={{ strokeDashoffset: 440 }}
+                            animate={{
+                              strokeDashoffset:
+                                440 -
+                                440 *
+                                  ((securityPosture?.postureIndex || 92) / 100),
+                            }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="text-brand-primary"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <div className="text-4xl font-black text-white">
+                            {securityPosture?.postureIndex || 92}
+                          </div>
+                          <div className="text-[10px] text-brand-primary font-mono lowercase">
+                            {securityPosture?.trend || "stable"}
+                          </div>
                         </div>
-                        
-                        <div className="flex-1 space-y-6">
-                           <div className="p-4 bg-brand-primary/5 border-l-2 border-brand-primary">
-                              <div className="text-[10px] text-brand-primary font-display mb-1">HEALTH_ADVISORY</div>
-                              <div className="text-white text-sm font-light leading-tight">
-                                {securityPosture?.healthAdvisory || "Your attack surface is relatively secure. Review 3 minor logic flaws in payment gateway modules."}
-                              </div>
-                           </div>
-                           <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                 <div className="text-[8px] text-slate-600 font-mono tracking-widest mb-1 uppercase">COVERAGE</div>
-                                 <div className="text-xl font-black text-white">{securityPosture?.coverage?.percentage || 0}%</div>
-                              </div>
-                              <div>
-                                 <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-1 uppercase">RECENT_FIXES</div>
-                                 <div className="text-xl font-black text-white">{securityPosture?.activity?.mergedPRs || 0}</div>
-                              </div>
-                           </div>
+                      </div>
+
+                      <div className="flex-1 space-y-6">
+                        <div className="p-4 bg-brand-primary/5 border-l-2 border-brand-primary">
+                          <div className="text-[10px] text-brand-primary font-display mb-1">
+                            HEALTH_ADVISORY
+                          </div>
+                          <div className="text-white text-sm font-light leading-tight">
+                            {securityPosture?.healthAdvisory ||
+                              "Your attack surface is relatively secure. Review 3 minor logic flaws in payment gateway modules."}
+                          </div>
                         </div>
-                     </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="text-[8px] text-slate-600 font-mono tracking-widest mb-1 uppercase">
+                              COVERAGE
+                            </div>
+                            <div className="text-xl font-black text-white">
+                              {securityPosture?.coverage?.percentage || 0}%
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-1 uppercase">
+                              RECENT_FIXES
+                            </div>
+                            <div className="text-xl font-black text-white">
+                              {securityPosture?.activity?.mergedPRs || 0}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {}
                   <div className="glass-panel border-white/5 rounded-none p-8">
-                     <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">THREAT_INTEL_FEED</h3>
-                        <Activity className="w-4 h-4 text-brand-primary" />
-                     </div>
-                     
-                     <div className="space-y-1">
-                        {issues.length === 0 ? (
-                           <div className="text-center py-20 text-slate-600 font-mono text-xs">NO_THREATS_DETECTED</div>
-                        ) : (
-                          issues.slice(0, 6).map((issue, idx) => (
-                            <motion.div 
-                              key={issue._id}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.05 }}
-                              className="group flex items-center gap-6 p-4 border border-transparent hover:border-white/5 hover:bg-white/5 transition-all"
-                            >
-                               <div className="font-mono text-[10px] text-slate-700">{new Date(issue.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                               <div className={`w-1.5 h-1.5 rounded-full ${issue.severity === 'CRITICAL' ? 'bg-red-500 glow-red' : issue.severity === 'HIGH' ? 'bg-orange-500' : 'bg-brand-primary'}`} />
-                               <div className="flex-1">
-                                  <div className="text-white text-sm font-bold tracking-tight group-hover:text-brand-primary transition-colors">{issue.title}</div>
-                                  <div className="text-[10px] text-slate-500 font-mono uppercase">{issue.issueType} @ {issue.filePath?.split('/').pop() || 'Global'}</div>
-                               </div>
-                               <div className="text-[10px] font-mono text-slate-600">{issue.severity}</div>
-                            </motion.div>
-                          ))
-                        )}
-                     </div>
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className="text-xs font-display tracking-widest text-slate-500 uppercase">
+                        THREAT_INTEL_FEED
+                      </h3>
+                      <Activity className="w-4 h-4 text-brand-primary" />
+                    </div>
+
+                    <div className="space-y-1">
+                      {issues.length === 0 ? (
+                        <div className="text-center py-20 text-slate-600 font-mono text-xs">
+                          NO_THREATS_DETECTED
+                        </div>
+                      ) : (
+                        issues.slice(0, 6).map((issue, idx) => (
+                          <motion.div
+                            key={issue._id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            className="group flex items-center gap-6 p-4 border border-transparent hover:border-white/5 hover:bg-white/5 transition-all"
+                          >
+                            <div className="font-mono text-[10px] text-slate-700">
+                              {new Date(issue.createdAt).toLocaleTimeString(
+                                [],
+                                { hour: "2-digit", minute: "2-digit" },
+                              )}
+                            </div>
+                            <div
+                              className={`w-1.5 h-1.5 rounded-full ${issue.severity === "CRITICAL" ? "bg-red-500 glow-red" : issue.severity === "HIGH" ? "bg-orange-500" : "bg-brand-primary"}`}
+                            />
+                            <div className="flex-1">
+                              <div className="text-white text-sm font-bold tracking-tight group-hover:text-brand-primary transition-colors">
+                                {issue.title}
+                              </div>
+                              <div className="text-[10px] text-slate-500 font-mono uppercase">
+                                {issue.issueType} @{" "}
+                                {issue.filePath?.split("/").pop() || "Global"}
+                              </div>
+                            </div>
+                            <div className="text-[10px] font-mono text-slate-600">
+                              {issue.severity}
+                            </div>
+                          </motion.div>
+                        ))
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {}
                 <div className="space-y-8">
-                   <div className="glass-panel border-white/5 p-8 rounded-none">
-                      <h4 className="text-[10px] font-display tracking-widest text-brand-primary mb-6 uppercase">Active_Agents</h4>
-                      <div className="space-y-6">
-                        {[
-                          { name: 'KENDRA_SHIELD', action: 'Monitoring Auth Interface', status: 'PROTECTING' },
-                          { name: 'KENDRA_SENTRY', action: 'Scanning Repo Surfaces', status: 'SCANNING' },
-                          { name: 'KENDRA_FLOW', action: 'Waiting for Approvals', status: 'IDLE' }
-                        ].map((agent, i) => (
-                          <div key={i} className="flex items-center gap-4">
-                            <div className={`w-2 h-2 rounded-full ${agent.status === 'SCANNING' ? 'bg-brand-primary animate-pulse' : 'bg-brand-primary/20'}`} />
-                            <div className="flex-1">
-                              <div className="text-white text-xs font-bold">{agent.name}</div>
-                              <div className="text-[9px] text-slate-500 uppercase">{agent.action}</div>
+                  <div className="glass-panel border-white/5 p-8 rounded-none">
+                    <h4 className="text-[10px] font-display tracking-widest text-brand-primary mb-6 uppercase">
+                      Active_Agents
+                    </h4>
+                    <div className="space-y-6">
+                      {[
+                        {
+                          name: "KENDRA_SHIELD",
+                          action: "Monitoring Auth Interface",
+                          status: "PROTECTING",
+                        },
+                        {
+                          name: "KENDRA_SENTRY",
+                          action: "Scanning Repo Surfaces",
+                          status: "SCANNING",
+                        },
+                        {
+                          name: "KENDRA_FLOW",
+                          action: "Waiting for Approvals",
+                          status: "IDLE",
+                        },
+                      ].map((agent, i) => (
+                        <div key={i} className="flex items-center gap-4">
+                          <div
+                            className={`w-2 h-2 rounded-full ${agent.status === "SCANNING" ? "bg-brand-primary animate-pulse" : "bg-brand-primary/20"}`}
+                          />
+                          <div className="flex-1">
+                            <div className="text-white text-xs font-bold">
+                              {agent.name}
                             </div>
-                            <div className="text-[8px] font-mono text-brand-primary/50">{agent.status}</div>
+                            <div className="text-[9px] text-slate-500 uppercase">
+                              {agent.action}
+                            </div>
                           </div>
-                        ))}
-                      </div>
-                   </div>
+                          <div className="text-[8px] font-mono text-brand-primary/50">
+                            {agent.status}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-                   <div className="glass-panel border-brand-accent/20 bg-brand-accent/5 p-8 rounded-none">
-                      <div className="flex items-center gap-3 mb-4 text-brand-accent">
-                        <Zap className="w-5 h-5" />
-                        <h4 className="text-xs font-black uppercase tracking-widest font-display">Efficiency_Gains</h4>
-                      </div>
-                      <div className="text-3xl font-black text-white mb-2">-32%</div>
-                      <p className="text-[10px] text-slate-400 font-light leading-relaxed">Average reduction in critical vulnerabilities since integration.</p>
-                   </div>
+                  <div className="glass-panel border-brand-accent/20 bg-brand-accent/5 p-8 rounded-none">
+                    <div className="flex items-center gap-3 mb-4 text-brand-accent">
+                      <Zap className="w-5 h-5" />
+                      <h4 className="text-xs font-black uppercase tracking-widest font-display">
+                        Efficiency_Gains
+                      </h4>
+                    </div>
+                    <div className="text-3xl font-black text-white mb-2">
+                      -32%
+                    </div>
+                    <p className="text-[10px] text-slate-400 font-light leading-relaxed">
+                      Average reduction in critical vulnerabilities since
+                      integration.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -789,35 +896,54 @@ export default function DashboardPage() {
             {activeTab === "repos" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center mb-6">
-                   <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">MANAGED_SURFACE_NODES</h3>
+                  <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">
+                    MANAGED_SURFACE_NODES
+                  </h3>
                 </div>
                 {repositories.length === 0 ? (
                   <div className="glass-panel border-white/5 py-24 text-center">
                     <GitBranch className="w-16 h-16 text-slate-800 mx-auto mb-6" />
-                    <p className="text-slate-500 font-mono text-xs">NO_NODES_FOUND. SYNC_REQUIRED.</p>
+                    <p className="text-slate-500 font-mono text-xs">
+                      NO_NODES_FOUND. SYNC_REQUIRED.
+                    </p>
                   </div>
                 ) : (
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-1 bg-white/5 border border-white/5">
                     {repositories.map((repo) => (
-                      <div key={repo._id} className="bg-bg-dark p-8 group relative overflow-hidden">
+                      <div
+                        key={repo._id}
+                        className="bg-bg-dark p-8 group relative overflow-hidden"
+                      >
                         <div className="absolute top-0 right-0 p-4 opacity-[0.05] group-hover:opacity-20 transition-opacity">
-                           <GitBranch className="w-12 h-12" />
+                          <GitBranch className="w-12 h-12" />
                         </div>
                         <div className="relative z-10">
                           <div className="flex items-center gap-2 mb-4">
-                            <div className={`w-1.5 h-1.5 rounded-full ${repo.isActive ? 'bg-brand-primary glow-primary' : 'bg-slate-700'}`} />
-                            <span className="text-[10px] font-mono text-slate-500 tracking-tighter uppercase">{repo.platform} / {repo.language || 'UNKNOWN'}</span>
+                            <div
+                              className={`w-1.5 h-1.5 rounded-full ${repo.isActive ? "bg-brand-primary glow-primary" : "bg-slate-700"}`}
+                            />
+                            <span className="text-[10px] font-mono text-slate-500 tracking-tighter uppercase">
+                              {repo.platform} / {repo.language || "UNKNOWN"}
+                            </span>
                           </div>
-                          <h4 className="text-lg font-black text-white mb-2 tracking-tight group-hover:text-brand-primary transition-colors">{repo.repoName}</h4>
-                          <p className="text-xs text-slate-500 mb-8 font-light italic truncate">{repo.repoUrl}</p>
-                          
+                          <h4 className="text-lg font-black text-white mb-2 tracking-tight group-hover:text-brand-primary transition-colors">
+                            {repo.repoName}
+                          </h4>
+                          <p className="text-xs text-slate-500 mb-8 font-light italic truncate">
+                            {repo.repoUrl}
+                          </p>
+
                           <div className="flex gap-4">
                             <button
-                              onClick={() => handleAnalyzeRepo(repo._id, repo.repoName)}
+                              onClick={() =>
+                                handleAnalyzeRepo(repo._id, repo.repoName)
+                              }
                               disabled={analyzing === repo._id}
                               className="flex-1 py-3 bg-white/5 hover:bg-white/10 text-white font-black text-[10px] tracking-widest uppercase transition-all disabled:opacity-50"
                             >
-                              {analyzing === repo._id ? "ANALYZING..." : "SCAN_SURFACE"}
+                              {analyzing === repo._id
+                                ? "ANALYZING..."
+                                : "SCAN_SURFACE"}
                             </button>
                             <a
                               href={repo.repoUrl}
@@ -839,7 +965,9 @@ export default function DashboardPage() {
             {activeTab === "issues" && (
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
-                  <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">IDENTIFIED_THREAT_DATABASE</h3>
+                  <h3 className="text-sm font-display tracking-widest text-slate-500 uppercase">
+                    IDENTIFIED_THREAT_DATABASE
+                  </h3>
                   <div className="flex gap-4 w-full md:w-auto">
                     <input
                       type="text"
@@ -865,7 +993,9 @@ export default function DashboardPage() {
                 {filteredIssues.length === 0 ? (
                   <div className="glass-panel border-white/5 py-24 text-center">
                     <Shield className="w-16 h-16 text-slate-800 mx-auto mb-6" />
-                    <p className="text-slate-500 font-mono text-xs">NO_THREATS_MATCHING_CRITERIA</p>
+                    <p className="text-slate-500 font-mono text-xs">
+                      NO_THREATS_MATCHING_CRITERIA
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-0.5 bg-white/10 border border-white/5">
@@ -874,25 +1004,49 @@ export default function DashboardPage() {
                         key={issue._id}
                         className="bg-bg-dark border-b border-white/5 group"
                       >
-                        <div 
+                        <div
                           className="p-6 flex flex-col md:flex-row gap-6 cursor-pointer hover:bg-white/5 transition-all"
-                          onClick={() => setExpandedIssue(expandedIssue === issue._id ? null : issue._id)}
+                          onClick={() =>
+                            setExpandedIssue(
+                              expandedIssue === issue._id ? null : issue._id,
+                            )
+                          }
                         >
-                          <div className={`w-2 h-2 mt-2 rounded-full ${issue.severity === 'CRITICAL' ? 'bg-red-500 glow-red' : 'bg-brand-primary'}`} />
+                          <div
+                            className={`w-2 h-2 mt-2 rounded-full ${issue.severity === "CRITICAL" ? "bg-red-500 glow-red" : "bg-brand-primary"}`}
+                          />
                           <div className="flex-1">
-                             <div className="flex items-center gap-3 mb-1">
-                                <span className={`text-[8px] font-mono px-2 py-0.5 border ${getSeverityColor(issue.severity)}`}>{issue.severity}</span>
-                                <span className="text-[8px] font-mono text-slate-600 uppercase tracking-widest">{issue.issueType}</span>
-                             </div>
-                             <h4 className="text-white font-bold tracking-tight mb-1">{issue.title}</h4>
-                             <p className="text-xs text-slate-500 font-light truncate max-w-2xl">{issue.description}</p>
+                            <div className="flex items-center gap-3 mb-1">
+                              <span
+                                className={`text-[8px] font-mono px-2 py-0.5 border ${getSeverityColor(issue.severity)}`}
+                              >
+                                {issue.severity}
+                              </span>
+                              <span className="text-[8px] font-mono text-slate-600 uppercase tracking-widest">
+                                {issue.issueType}
+                              </span>
+                            </div>
+                            <h4 className="text-white font-bold tracking-tight mb-1">
+                              {issue.title}
+                            </h4>
+                            <p className="text-xs text-slate-500 font-light truncate max-w-2xl">
+                              {issue.description}
+                            </p>
                           </div>
                           <div className="flex items-center gap-6">
-                             <div className="text-right">
-                                <div className="text-[8px] font-mono text-slate-600 uppercase tracking-widest">FILE_PATH</div>
-                                <div className="text-[10px] text-slate-400 font-mono truncate max-w-[150px]">{issue.filePath?.split('/').pop() || 'Global'}</div>
-                             </div>
-                             {expandedIssue === issue._id ? <ChevronUp className="w-4 h-4 text-slate-600" /> : <ChevronDown className="w-4 h-4 text-slate-600" />}
+                            <div className="text-right">
+                              <div className="text-[8px] font-mono text-slate-600 uppercase tracking-widest">
+                                FILE_PATH
+                              </div>
+                              <div className="text-[10px] text-slate-400 font-mono truncate max-w-[150px]">
+                                {issue.filePath?.split("/").pop() || "Global"}
+                              </div>
+                            </div>
+                            {expandedIssue === issue._id ? (
+                              <ChevronUp className="w-4 h-4 text-slate-600" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-slate-600" />
+                            )}
                           </div>
                         </div>
 
@@ -905,38 +1059,58 @@ export default function DashboardPage() {
                               className="overflow-hidden bg-white/[0.02]"
                             >
                               <div className="p-10 border-t border-white/5 grid md:grid-cols-2 gap-10">
-                                 <div>
-                                    <h5 className="text-[10px] font-mono text-brand-primary uppercase tracking-[0.2em] mb-4">Vulnerability_Deep_Dive</h5>
-                                    <p className="text-slate-400 text-sm font-light leading-relaxed mb-6">{issue.description}</p>
-                                    
-                                    {issue.aiExplanation && (
-                                       <div className="p-4 bg-brand-primary/5 border border-brand-primary/10 rounded-none mb-6">
-                                          <div className="text-[8px] font-mono text-brand-primary mb-2 uppercase">AI_ENGINE_REASONING</div>
-                                          <p className="text-[11px] text-slate-300 italic font-light">"{issue.aiExplanation}"</p>
-                                       </div>
-                                    )}
+                                <div>
+                                  <h5 className="text-[10px] font-mono text-brand-primary uppercase tracking-[0.2em] mb-4">
+                                    Vulnerability_Deep_Dive
+                                  </h5>
+                                  <p className="text-slate-400 text-sm font-light leading-relaxed mb-6">
+                                    {issue.description}
+                                  </p>
 
-                                    <button
-                                      onClick={() => handleFixIssue(issue)}
-                                      disabled={fixingIssue === issue._id}
-                                      className="w-full py-4 bg-brand-primary text-bg-dark font-black tracking-widest uppercase text-xs hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] disabled:opacity-50"
-                                    >
-                                      {fixingIssue === issue._id ? "EXECUTING_FIX..." : "INITIATE_REMEDIATION_PR"}
-                                    </button>
-                                 </div>
-
-                                 <div className="space-y-6">
-                                    <div className="grid grid-cols-2 gap-4">
-                                       <div className="p-4 glass-panel border-white/5">
-                                          <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">AI_CONFIDENCE</div>
-                                          <div className="text-xl font-black text-white">{(issue.aiConfidence || 0.85).toFixed(2)}</div>
-                                       </div>
-                                       <div className="p-4 glass-panel border-white/5">
-                                          <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">IMPACT_SCORE</div>
-                                          <div className="text-xl font-black text-white">HIGH</div>
-                                       </div>
+                                  {issue.aiExplanation && (
+                                    <div className="p-4 bg-brand-primary/5 border border-brand-primary/10 rounded-none mb-6">
+                                      <div className="text-[8px] font-mono text-brand-primary mb-2 uppercase">
+                                        AI_ENGINE_REASONING
+                                      </div>
+                                      <p className="text-[11px] text-slate-300 italic font-light">
+                                        "{issue.aiExplanation}"
+                                      </p>
                                     </div>
-                                 </div>
+                                  )}
+
+                                  <button
+                                    onClick={() => handleFixIssue(issue)}
+                                    disabled={fixingIssue === issue._id}
+                                    className="w-full py-4 bg-brand-primary text-bg-dark font-black tracking-widest uppercase text-xs hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] disabled:opacity-50"
+                                  >
+                                    {fixingIssue === issue._id
+                                      ? "EXECUTING_FIX..."
+                                      : "INITIATE_REMEDIATION_PR"}
+                                  </button>
+                                </div>
+
+                                <div className="space-y-6">
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 glass-panel border-white/5">
+                                      <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">
+                                        AI_CONFIDENCE
+                                      </div>
+                                      <div className="text-xl font-black text-white">
+                                        {(issue.aiConfidence || 0.85).toFixed(
+                                          2,
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="p-4 glass-panel border-white/5">
+                                      <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">
+                                        IMPACT_SCORE
+                                      </div>
+                                      <div className="text-xl font-black text-white">
+                                        HIGH
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </motion.div>
                           )}
@@ -950,34 +1124,53 @@ export default function DashboardPage() {
 
             {activeTab === "prs" && (
               <div className="space-y-6">
-                <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase mb-6">REMEDIATION_WORKFLOWS</h3>
+                <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase mb-6">
+                  REMEDIATION_WORKFLOWS
+                </h3>
                 {pullRequests.length === 0 ? (
                   <div className="glass-panel border-white/5 py-24 text-center">
                     <GitPullRequest className="w-16 h-16 text-slate-800 mx-auto mb-6" />
-                    <p className="text-slate-500 font-mono text-xs">NO_ACTIVE_FLOWS</p>
+                    <p className="text-slate-500 font-mono text-xs">
+                      NO_ACTIVE_FLOWS
+                    </p>
                   </div>
                 ) : (
                   <div className="grid gap-4">
                     {pullRequests.map((pr) => (
-                      <div key={pr._id} className="glass-panel border-white/5 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div
+                        key={pr._id}
+                        className="glass-panel border-white/5 p-8 flex flex-col md:flex-row justify-between items-center gap-6"
+                      >
                         <div className="flex-1">
-                           <div className="flex items-center gap-3 mb-2">
-                              <span className="text-[10px] font-mono text-brand-primary">#{pr.prNumber}</span>
-                              <h4 className="text-white font-bold">{pr.title}</h4>
-                           </div>
-                           <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">{pr.branch}</div>
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-[10px] font-mono text-brand-primary">
+                              #{pr.prNumber}
+                            </span>
+                            <h4 className="text-white font-bold">{pr.title}</h4>
+                          </div>
+                          <div className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                            {pr.branch}
+                          </div>
                         </div>
                         <div className="flex items-center gap-8">
-                           <div className="text-right">
-                              <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">REVIEW_STATUS</div>
-                              <div className={`text-xs font-bold ${getStatusColor(pr.reviewStatus)}`}>{pr.reviewStatus.toUpperCase()}</div>
-                           </div>
-                           <a 
-                             href={pr.prUrl} target="_blank" rel="noopener noreferrer"
-                             className="p-4 bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10"
-                           >
-                             <ExternalLink className="w-4 h-4" />
-                           </a>
+                          <div className="text-right">
+                            <div className="text-[8px] font-mono text-slate-600 uppercase mb-1">
+                              REVIEW_STATUS
+                            </div>
+                            <div
+                              className={`text-xs font-bold ${getStatusColor(pr.reviewStatus)}`}
+                            >
+                              {pr.reviewStatus.toUpperCase()}
+                            </div>
+                          </div>
+                          <a
+                            href={pr.prUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-4 bg-white/5 hover:bg-white/10 text-white transition-all border border-white/10"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
                         </div>
                       </div>
                     ))}
@@ -988,25 +1181,42 @@ export default function DashboardPage() {
 
             {activeTab === "audit" && (
               <div className="space-y-1">
-                <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase mb-8">AUTONOMOUS_OPERATION_LOGS</h3>
+                <h3 className="text-sm font-mono tracking-widest text-slate-500 uppercase mb-8">
+                  AUTONOMOUS_OPERATION_LOGS
+                </h3>
                 {auditLogs.length === 0 ? (
                   <div className="glass-panel border-white/5 py-24 text-center">
                     <Activity className="w-16 h-16 text-slate-800 mx-auto mb-6" />
-                    <p className="text-slate-500 font-mono text-xs">LOG_STREAM_EMPTY</p>
+                    <p className="text-slate-500 font-mono text-xs">
+                      LOG_STREAM_EMPTY
+                    </p>
                   </div>
                 ) : (
                   auditLogs.map((log) => (
-                    <div key={log._id} className="group p-6 bg-white/[0.01] border-b border-white/5 hover:bg-white/[0.03] transition-all">
-                       <div className="flex items-center gap-6">
-                          <div className="font-mono text-[10px] text-slate-700">{new Date(log.timestamp).toLocaleTimeString()}</div>
-                          <div className={`w-1 h-4 ${log.approved ? 'bg-brand-primary' : 'bg-red-500'}`} />
-                          <div className="flex-1">
-                             <div className="text-white text-sm font-bold truncate">{log.action}</div>
-                             <div className="text-[10px] font-mono text-slate-500 uppercase italic">{log.agentName} @ {log.riskLevel} RISK</div>
+                    <div
+                      key={log._id}
+                      className="group p-6 bg-white/[0.01] border-b border-white/5 hover:bg-white/[0.03] transition-all"
+                    >
+                      <div className="flex items-center gap-6">
+                        <div className="font-mono text-[10px] text-slate-700">
+                          {new Date(log.timestamp).toLocaleTimeString()}
+                        </div>
+                        <div
+                          className={`w-1 h-4 ${log.approved ? "bg-brand-primary" : "bg-red-500"}`}
+                        />
+                        <div className="flex-1">
+                          <div className="text-white text-sm font-bold truncate">
+                            {log.action}
                           </div>
-                          <div className="text-[10px] font-mono text-slate-600">{log.approved ? 'AUTHORIZED' : 'BLOCKED'}</div>
-                       </div>
-                     </div>
+                          <div className="text-[10px] font-mono text-slate-500 uppercase italic">
+                            {log.agentName} @ {log.riskLevel} RISK
+                          </div>
+                        </div>
+                        <div className="text-[10px] font-mono text-slate-600">
+                          {log.approved ? "AUTHORIZED" : "BLOCKED"}
+                        </div>
+                      </div>
+                    </div>
                   ))
                 )}
               </div>

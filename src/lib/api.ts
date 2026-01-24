@@ -1,5 +1,6 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "https://kendra-backend-2kcs.onrender.com";
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://kendra-backend-yc18.onrender.com";
 
 class ApiClient {
   constructor() {
@@ -7,18 +8,15 @@ class ApiClient {
     this.token = this.getTokenFromStorage();
   }
 
-  
   getTokenFromStorage() {
-    
     const token = localStorage.getItem("auth_token");
 
-    
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get("token");
 
     if (urlToken) {
       this.setToken(urlToken);
-      
+
       window.history.replaceState({}, document.title, window.location.pathname);
       return urlToken;
     }
@@ -26,32 +24,26 @@ class ApiClient {
     return token;
   }
 
-  
   setToken(token) {
     this.token = token;
     localStorage.setItem("auth_token", token);
   }
 
-  
   clearToken() {
     this.token = null;
     localStorage.removeItem("auth_token");
   }
 
-  
   async request(endpoint, options = {}) {
     const url = `${this.baseUrl}${endpoint}`;
 
-    
     const headers = {
       "Content-Type": "application/json",
       ...options.headers,
     };
 
-    
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
-      
     } else {
       console.warn("⚠️ No token available for request to:", endpoint);
     }
@@ -61,7 +53,6 @@ class ApiClient {
       headers,
     };
 
-    
     if (options.body && typeof options.body !== "string") {
       config.body = JSON.stringify(options.body);
     }
@@ -69,12 +60,10 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
 
-      
       if (response.status === 401) {
         console.error("❌ 401 Unauthorized - Token may be expired");
         this.clearToken();
 
-        
         if (!window.location.pathname.includes("/login")) {
           window.location.href = "/login?error=session_expired";
         }
@@ -100,19 +89,14 @@ class ApiClient {
     }
   }
 
-  
-
-  
   getCurrentUser() {
     return this.request("/api/auth/me");
   }
 
-  
   getGitHubStatus() {
     return this.request("/api/auth/github/status");
   }
 
-  
   connectGitHub() {
     if (!this.token) {
       console.error("No token available for GitHub connect");
@@ -122,20 +106,18 @@ class ApiClient {
 
     console.log(
       "🔗 Connecting GitHub with token:",
-      this.token.substring(0, 20) + "..."
+      this.token.substring(0, 20) + "...",
     );
 
     window.location.href = `${this.baseUrl}/api/auth/github/connect?token=${encodeURIComponent(this.token)}`;
   }
 
-  
   disconnectGitHub() {
     return this.request("/api/auth/github/disconnect", {
       method: "POST",
     });
   }
 
-  
   logout() {
     return this.request("/api/auth/logout", {
       method: "POST",
@@ -144,28 +126,22 @@ class ApiClient {
     });
   }
 
-  
-
-  
   getRepositories() {
     return this.request("/api/repositories");
   }
 
-  
   syncRepositories() {
     return this.request("/api/repositories/sync", {
       method: "POST",
     });
   }
 
-  
   syncRepository(owner, repo) {
     return this.request(`/api/repositories/${owner}/${repo}/sync`, {
       method: "POST",
     });
   }
 
-  
   updateRepository(repoId, data) {
     return this.request(`/api/repositories/${repoId}`, {
       method: "PATCH",
@@ -173,41 +149,33 @@ class ApiClient {
     });
   }
 
-  
   deleteRepository(repoId) {
     return this.request(`/api/repositories/${repoId}`, {
       method: "DELETE",
     });
   }
 
-  
-
-  
   analyzeRepository(repositoryId) {
     return this.request(`/api/issues/analyze/${repositoryId}`, {
       method: "POST",
     });
   }
 
-  
   getIssues(params = {}) {
     const query = new URLSearchParams(params).toString();
     return this.request(`/api/issues${query ? `?${query}` : ""}`);
   }
 
-  
   getIssue(issueId) {
     return this.request(`/api/issues/${issueId}`);
   }
 
-  
   fixIssue(issueId) {
     return this.request(`/api/issues/${issueId}/fix`, {
       method: "POST",
     });
   }
 
-  
   updateIssue(issueId, data) {
     return this.request(`/api/issues/${issueId}`, {
       method: "PATCH",
@@ -215,49 +183,39 @@ class ApiClient {
     });
   }
 
-  
   getIssueStats(repositoryId) {
     return this.request(`/api/issues/stats/${repositoryId}`);
   }
 
-  
   getPullRequests(params = {}) {
     const query = new URLSearchParams(params).toString();
     return this.request(`/api/pull-requests${query ? `?${query}` : ""}`);
   }
 
-  
   getPullRequest(prId) {
     return this.request(`/api/pull-requests/${prId}`);
   }
 
-  
   getPRStats(repositoryId) {
     return this.request(`/api/pull-requests/stats/${repositoryId}`);
   }
 
-  
   syncPullRequests() {
     return this.request("/api/pull-requests/sync", {
       method: "POST",
     });
   }
 
-  
-
-  
   getAuditLogs(params = {}) {
     const query = new URLSearchParams(params).toString();
     return this.request(`/api/audit${query ? `?${query}` : ""}`);
   }
 
-  
   getAuditStats(repositoryId) {
     const query = repositoryId ? `?repositoryId=${repositoryId}` : "";
     return this.request(`/api/audit/stats${query}`);
   }
 
-  
   getAuditLog(logId) {
     return this.request(`/api/audit/${logId}`);
   }
@@ -266,19 +224,14 @@ class ApiClient {
     return this.request(`/api/stats/${repositoryId}`);
   }
 
-  
-
-  
   getSecurityPosture() {
     return this.request("/api/stats/security-posture");
   }
 
-  
   getThreats(repositoryId) {
     return this.request(`/api/issues/threats/${repositoryId}`);
   }
 
-  
   testAPIEndpoint(endpoint, method = "GET", headers = {}) {
     return this.request("/api/issues/test-endpoint", {
       method: "POST",
@@ -286,19 +239,14 @@ class ApiClient {
     });
   }
 
-  
   getPenTestReport(repositoryId) {
     return this.request(`/api/issues/pen-test-report/${repositoryId}`);
   }
 
-  
-
-  
   debugGitHubConnection() {
     return this.request("/api/auth/github/debug");
   }
 }
-
 
 const apiClient = new ApiClient();
 

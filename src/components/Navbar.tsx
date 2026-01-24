@@ -1,4 +1,3 @@
-
 import {
   ChevronDown,
   LayoutDashboard,
@@ -10,7 +9,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import apiClient from "../lib/api"; 
+import apiClient from "../lib/api";
 
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -80,8 +79,8 @@ export default function Navbar() {
   const handleGitHubLogin = () => {
     const apiBaseUrl =
       import.meta.env.VITE_API_BASE_URL ||
-      "https://kendra-backend-2kcs.onrender.com";
-    
+      "https://kendra-backend-yc18.onrender.com";
+
     if (isAuthenticated) {
       window.location.href = `${apiBaseUrl}/api/auth/github/connect?token=${localStorage.getItem("auth_token") || ""}`;
     } else {
