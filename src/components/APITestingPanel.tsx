@@ -92,7 +92,6 @@ export default function APITestingPanel() {
         </div>
 
         <div className="space-y-6">
-          {/* Endpoint URL */}
           <div>
             <label className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
               Endpoint URL
@@ -106,7 +105,6 @@ export default function APITestingPanel() {
             />
           </div>
 
-          {/* HTTP Method */}
           <div>
             <label className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
               HTTP Method
@@ -124,7 +122,6 @@ export default function APITestingPanel() {
             </select>
           </div>
 
-          {/* Headers (Optional) */}
           <div>
             <label className="block text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">
               Headers (JSON, Optional)
